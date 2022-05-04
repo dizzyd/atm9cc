@@ -13,6 +13,7 @@ on:
       - '**/help/*.txt'
       - '**/deps.json'
       - '!**.min.lua'
+      - '!install.lua'
 
 env:
   MODULES: |-
