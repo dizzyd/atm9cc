@@ -27,7 +27,18 @@ local addRepoIndex = #existingRepos + 1
 for index, repo in ipairs(existingRepos) do
     if #repo >= #installRepo then
         if repo:sub(1, #installRepo) == installRepo then
-            addRepoIndex = index
+            local matched = false
+            if repoPath == "" then
+                if repo:match("%:") ~= ":" then
+                    matched = true
+                end
+            elseif repo:sub(#repo - #repoPath + 1) == repoPath then
+                matched = true
+            end
+            if matched then
+                addRepoIndex = index
+                break
+            end
         end
     end
 end
@@ -36,6 +47,7 @@ settings.set("ghu.extraRepos", existingRepos)
 if minified ~= nil then
     settings.set(string.format("ghu.minified.%s", repoString), minified)
 end
+settings.save()
 
 local ghuUpdatePath = settings.get("ghu.base", "/ghu") .. "core/programs/ghuupdate.lua"
 if fs.exists(ghuUpdatePath) then
